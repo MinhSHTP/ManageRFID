@@ -1,0 +1,141 @@
+﻿<Window x:Class="RFID_SHTP.UI.DetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RFID_SHTP.UI"
+        mc:Ignorable="d"
+        Loaded="DetailWindow_Loaded"
+        Title="Xem chi tiết" Height="600" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Thông tin chi tiết" Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="Ảnh vào 1" Grid.Column="0">
+                            <Image x:Name="ImgInReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                        </GroupBox>
+
+                        <GroupBox Header="Ảnh ra 1" Grid.Column="1">
+                            <Image x:Name="ImgInReport2"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                        </GroupBox>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="Ảnh vào 2" Grid.Column="0">
+                            <Image x:Name="ImgOutReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                        </GroupBox>
+
+                        <GroupBox Header="Ảnh ra 2" Grid.Column="1">
+                            <Image x:Name="ImgOutReport2"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Name="AvatarReport" Source="/Image/phamtruongan.jpg" Stretch="Uniform" Height="Auto" Width="Auto" Margin="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                    <Grid Grid.Row="1" HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Họ và tên:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="Phạm Trường An"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Giới tính:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="Nam"/>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Loại xe:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="Xe máy"/>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Biển số xe:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="29-E1 456.78"/>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Ngày:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="10/11/2016"/>
+                        </Grid>
+
+                        <Grid Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Giờ:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="07:30:22"/>
+                        </Grid>
+
+                        <Grid Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Trạng thái:" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="Vào" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        
+        <Button Grid.Row="1" Content="Thoát ứng dụng" Width="100" ToolTip="Thoát khỏi ứng dụng" HorizontalAlignment="Right" Margin="0,0,16,25" Click="CloseButton_Click" Height="46" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
