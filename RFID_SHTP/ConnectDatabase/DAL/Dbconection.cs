@@ -11,10 +11,9 @@ namespace RFID_SHTP.ConnectDatabase.DAL
 {
     public class Dbconection
     {
-
-
-        byte[] img = File.ReadAllBytes(@"C:\Users\minhh\Desktop\a_Khoa_FIX.png");
-        public SqlConnection con = new SqlConnection(@"Data Source=HOST002\SEVER04;Initial Catalog=FILESTREAMTEST;User ID=SQLTest;Password=12345");
+        byte[] img = File.ReadAllBytes(@"..//..//Image//phamtruongan.jpg");
+        public SqlConnection con = new SqlConnection(@"Data Source = DESKTOP-4KLT09L\SQLEXPRESS;Initial Catalog = DATABASE; User ID = sa; Password=Kimthu@17293");
+        //public SqlConnection con = new SqlConnection(@"Data Source=HOST002\SEVER04;Initial Catalog=DATABASE;User ID=SQLTest;Password=12345");
         public SqlConnection getcon()
         {
             if (con.State == ConnectionState.Closed)

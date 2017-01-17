@@ -34,18 +34,13 @@ namespace RFID_SHTP.UI
             InitializeComponent();
         }
 
-        private void DevicesList1_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void _videoSource1_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
         {
             getNewFrame(MainWindow._cam1, eventArgs);
         }
 
         void getNewFrame(System.Windows.Controls.Image camera, NewFrameEventArgs eventArgs)
-        { 
+        {
             try
             {
                 System.Drawing.Image img = (Bitmap)eventArgs.Frame.Clone();
@@ -78,72 +73,112 @@ namespace RFID_SHTP.UI
             }
         }
 
-        private void DevicesList2_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-
         private void _videoSource2_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
         {
             getNewFrame(MainWindow._cam2, eventArgs);
         }
 
+        private void DevicesList2_SelectonChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((DevicesList2.SelectedIndex == DevicesList1.SelectedIndex) && (DevicesList2.SelectedIndex != 0))
+            {
+                MessageBox.Show("Camera không hỗ trợ đa luồng - Camera 2 phải khác Camera 1", "Lỗi hiển thị camera", MessageBoxButton.OK);
+                DevicesList2.SelectedIndex = 0;
+            }
+        }
+
+        private void DevicesList1_SelectonChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((DevicesList2.SelectedIndex == DevicesList1.SelectedIndex) && (DevicesList1.SelectedIndex != 0))
+            {
+                MessageBox.Show("Camera không hỗ trợ đa luồng - Camera 1 phải khác Camera 2", "Lỗi hiển thị camera", MessageBoxButton.OK);
+                DevicesList1.SelectedIndex = 0;
+            }
+        }
+
         private void StartCameraBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (DevicesList1.SelectedIndex != DevicesList2.SelectedIndex)
+            BitmapImage screenTransfer = new BitmapImage();
+            screenTransfer.BeginInit();
+            screenTransfer.UriSource = new Uri("pack://application:,,,/RFID_SHTP;component/Image/black_background.jpg");
+            screenTransfer.EndInit();
+            //if (DevicesList1.SelectedIndex != DevicesList2.SelectedIndex)
+            //{
+            if (DevicesList1.SelectedIndex != 0)
             {
-                if (DevicesList1.SelectedIndex != -1)
+                if (_videoSource1 != null)
                 {
-                    if (_videoSource1 != null)
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            BitmapImage screenTransfer = new BitmapImage();
-                            screenTransfer.BeginInit();
-                            screenTransfer.UriSource = new Uri("pack://application:,,,/RFID_SHTP;component/Image/black_background.jpg");
-                            screenTransfer.EndInit();
-                            MainWindow._cam1.Source = screenTransfer;
-                        }));
-                        _videoSource1.Stop();
-                    }
-                    _videoSource1 = new VideoCaptureDevice(_videoDevices[DevicesList1.SelectedIndex].MonikerString);
-                    _lastDevice1 = _videoDevices[DevicesList1.SelectedIndex].Name;
-                    _videoSource1.DesiredFrameRate = 10;
-                    _videoSource1.NewFrame += _videoSource1_NewFrame;
-                    _videoSource1.Start();
+                        MainWindow._cam1.Source = screenTransfer;
+                    }));
+                    _videoSource1.Stop();
                 }
-
-                if (DevicesList2.SelectedIndex != -1)
-                {
-                    if (_videoSource2 != null)
-                    {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            BitmapImage screenTransfer = new BitmapImage();
-                            screenTransfer.BeginInit();
-                            screenTransfer.UriSource = new Uri("pack://application:,,,/RFID_SHTP;component/Image/black_background.jpg");
-                            screenTransfer.EndInit();
-                            MainWindow._cam2.Source = screenTransfer;
-                        }));
-                        _videoSource2.Stop();
-                    }
-                    _videoSource2 = new VideoCaptureDevice(_videoDevices[DevicesList2.SelectedIndex].MonikerString);
-                    _lastDevice2 = _videoDevices[DevicesList2.SelectedIndex].Name;
-                    _videoSource2.DesiredFrameRate = 10;
-                    _videoSource2.NewFrame += _videoSource2_NewFrame;
-                    _videoSource2.Start();
-                }
-
-                MainWindow._mainWindow.storeVideoCaptureDevice(_lastDevice1, _lastDevice2);
+                _videoSource1 = new VideoCaptureDevice(_videoDevices[DevicesList1.SelectedIndex - 1].MonikerString);
+                _lastDevice1 = _videoDevices[DevicesList1.SelectedIndex - 1].Name;
+                _videoSource1.DesiredFrameRate = 10;
+                _videoSource1.NewFrame += _videoSource1_NewFrame;
+                _videoSource1.Start();
             }
             else
             {
-                MessageBox.Show("Camera không hỗ trợ đa luồng - Camera 1 phải khác Camera 2", "Lỗi hiển thị camera", MessageBoxButton.OK);
+                
+                if (_videoSource1 != null)
+                {
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                        MainWindow._cam1.Source = screenTransfer;
+
+                    }));
+                    _videoSource1.Stop();
+                }
+               
             }
+
+
+            if (DevicesList2.SelectedIndex != 0)
+            {
+                if (_videoSource2 != null)
+                {
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                        MainWindow._cam2.Source = screenTransfer;
+                    }));
+                    _videoSource2.Stop();
+                }
+                _videoSource2 = new VideoCaptureDevice(_videoDevices[DevicesList2.SelectedIndex - 1].MonikerString);
+                _lastDevice2 = _videoDevices[DevicesList2.SelectedIndex - 1].Name;
+                _videoSource2.DesiredFrameRate = 10;
+                _videoSource2.NewFrame += _videoSource2_NewFrame;
+                _videoSource2.Start();
+            }
+            else
+            {
+                if (_videoSource2 != null)
+                {
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                    MainWindow._cam2.Source = screenTransfer;
+                    }));
+                    _videoSource2.Stop();
+                }
+                
+            }
+            MainWindow._mainWindow.storeVideoCaptureDevice(_lastDevice1, _lastDevice2);
+            //}
+            //else
+            //{
+            //MessageBox.Show("Camera không hỗ trợ đa luồng - Camera 1 phải khác Camera 2", "Lỗi hiển thị camera", MessageBoxButton.OK);
+            //}
 
         }
 
         private void SettingWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            DevicesList1.Items.Add("");
+            DevicesList2.Items.Add("");
+            DevicesList1.SelectedIndex = 0;
+            DevicesList2.SelectedIndex = 0;
             _videoDevices = _getListCamerasHelper.getListCameras();
             _lastDevice1 = MainWindow._mainWindow.returnLastVideoCaptureDevice1();
             _lastDevice2 = MainWindow._mainWindow.returnLastVideoCaptureDevice2();

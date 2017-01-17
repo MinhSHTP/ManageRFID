@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:RFID_SHTP.UI"
         ResizeMode="CanMinimize" 
         WindowStartupLocation="CenterScreen"
-        Closed="Window_Closed"
+        Closing="Window_Closing"
         Loaded="Form_Loaded"
         Title="Phần mềm quản lý ra vào" Height="700" Width="1200"
         >
@@ -25,6 +25,11 @@
                 <MenuItem Header="_Thiết lập">
                     <MenuItem Header="_Thiết lập camera" Click="SettingCameraMenuItem_Click"/>
                     <MenuItem Header="_Thiết lập cơ sở dữ liệu" Click="SettingDatabaseMenuItem_Click"/>
+                    <MenuItem Header="_Thiết lập đầu đọc thẻ" Click="SettingReaderDeviceMenuItem_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Tra cứu">
+                    <MenuItem Header="_Tra cứu theo ngày vào ra" Click="SearchByDateInOutMenuItem_Click"/>
+                    <MenuItem Header="_Tra cứu theo biển số xe" Click="SearchByLicensePlateMenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Báo cáo thống kê" Click="ReportMenuItem_Click">
                     <MenuItem Header="_Báo cáo thống kê theo ngày" />
@@ -43,7 +48,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Thời gian hệ thống:" HorizontalAlignment="Right" FontWeight="ExtraBold"/>
+            <Label Grid.Column="0" x:Name="TimeSystemLbl" Content="Thời gian hệ thống:" HorizontalAlignment="Right" FontWeight="ExtraBold"/>
 
             <Label Grid.Column="1" x:Name="TimerSystem" Content="" HorizontalAlignment="Right" FontSize="15" Background="Black" Foreground="White" Margin="0,5,5,0"/>
 
@@ -104,20 +109,11 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Content="Giới tính:" FontWeight="Bold"/>
-                                    <Label Grid.Column="1" Content="Nam"/>
-
-                                </Grid>
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                    </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="Loại xe:" FontWeight="Bold"/>
                                     <Label Grid.Column="1" Content="Xe máy"/>
 
                                 </Grid>
-                                <Grid Grid.Row="3">
+                                <Grid Grid.Row="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*"/>
@@ -126,7 +122,7 @@
                                     <Label Grid.Column="1" Content="29-E1 456.78"/>
 
                                 </Grid>
-                                <Grid Grid.Row="4">
+                                <Grid Grid.Row="3">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*"/>
@@ -135,7 +131,7 @@
                                     <Label Grid.Column="1" Content="27/12/2016"/>
 
                                 </Grid>
-                                <Grid Grid.Row="5">
+                                <Grid Grid.Row="4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*"/>
@@ -144,7 +140,7 @@
                                     <Label Grid.Column="1" Content="07:15:22"/>
 
                                 </Grid>
-                                <Grid Grid.Row="6">
+                                <Grid Grid.Row="5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*"/>
@@ -153,7 +149,7 @@
                                     <Label Grid.Column="1" Content="Vào" FontSize="20" FontWeight="Bold" Foreground="Green"/>
 
                                 </Grid>
-                                <Button Grid.Row="7" Content="Chụp" Width="100" ToolTip="Chụp ảnh" HorizontalAlignment="Center" Margin="31,24,36,-24" Click="SnapshotButton_Click"/>
+                                <Button Grid.Row="6" Content="Chụp" Width="100" ToolTip="Chụp ảnh" HorizontalAlignment="Center" Margin="31,24,36,-24" Click="SnapshotButton_Click"/>
                             </Grid>
 
                             <!--<ListBox Margin="5,5,5,41" Name="DevicesList" Grid.Row="0" ItemsSource="{Binding Model.ConnectionModel.DeviceList, Mode=OneWay}" SelectionChanged="Selector_OnSelectionChanged" MouseDoubleClick="DevicesList_MouseDoubleClick" />-->
@@ -364,11 +360,11 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Thống kê ra vào trong ngày" Name="thongketrongngayTabItem">
+            <TabItem Header="Thống kê xe trong bãi" Name="thongkexetrongbaiTabItem">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="6.5*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <!--<Grid Grid.Row="0">
@@ -492,24 +488,208 @@
                             </Grid>
                         </Grid>
                     </Grid>-->
-                    <Label Grid.Row="0" Name="ReportLbl" Content="Thống kê ra vào trong ngày 03/01/2016" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="50"/>
-                    <DataGrid Grid.Row="1" Margin="0,9,0,67" Grid.RowSpan="2" x:Name="DataGridView" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserResizeColumns="False" MouseDoubleClick="DataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Số lượng xe hiện có trong bãi:" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <Label Grid.Column="1" x:Name="thongkexetrongbaiCountVehicleLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" Foreground="Yellow" Background="Red" Margin="7,10,0,0"/>
+                    </Grid>
+
+                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexetrongbaiDataGridView" AutoGenerateColumns="False" VerticalAlignment="Top" IsReadOnly="True" CanUserResizeColumns="False" MouseDoubleClick="thongkexetrongbaiDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn  Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image x:Name="testImg" Height="25" Width="50" Source="{Binding _WarningIcon}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="STT" Binding="{Binding _Stt}" Width="50"/>
+                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding _Hoten}" Width="280"/>
+                            <DataGridTextColumn Header="Biển số xe" Binding="{Binding _Biensoxe}" Width="150"/>
+                            <DataGridTextColumn Header="Loại xe" Binding="{Binding _Loaixe}" Width="120"/>
+                            <DataGridTextColumn Header="Giờ vào" Binding="{Binding _Giovao}" Width="150"/>
+                            <DataGridTextColumn Header="Ngày vào" Binding="{Binding _Ngayvao}" Width="150"/>
+                            <DataGridTextColumn Header="Tracking" Binding="{Binding _Tracking}" Width="220"/>
+                            <!--<DataGridTextColumn Header="Đã vào được" Binding="{Binding Ngayvao}" Width="165" FontWeight="Bold" FontStyle="Italic"/>-->
+                            <!--<DataGridTextColumn Header="Ngày vào2" Binding="{Binding Hinhnhanvien}" Width="210"/>
+                            <DataGridTextColumn Header="Ngày vào3" Binding="{Binding Hinhcam1vao}" Width="210"/>
+                            <DataGridTextColumn Header="Ngày vào4" Binding="{Binding Hinhcam2vao}" Width="210"/>
+                            <DataGridTextColumn Header="Ngày vào5" Binding="{Binding UniqueID}" Width="210"/>-->
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Thống kê xe ra" Name="thongkexeraTabItem">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="6.5*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!--<Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Header="Ảnh vào 1" Grid.Column="0">
+                                    <Image x:Name="ImgInReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                                </GroupBox>
+
+                                <GroupBox Header="Ảnh ra 1" Grid.Column="1">
+                                    <Image x:Name="ImgInReport2"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                                </GroupBox>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Header="Ảnh vào 2" Grid.Column="0">
+                                    <Image x:Name="ImgOutReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                                </GroupBox>
+
+                                <GroupBox Header="Ảnh ra 2" Grid.Column="1">
+                                    <Image x:Name="ImgOutReport2"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Name="AvatarReport" Source="/Image/phamtruongan.jpg" Stretch="Uniform" Height="Auto" Width="Auto" Margin="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Họ và tên:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="Phạm Trường An"/>
+                                </Grid>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Giới tính:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="Nam"/>
+                                </Grid>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Loại xe:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="Xe máy"/>
+                                </Grid>
+
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Biển số xe:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="29-E1 456.78"/>
+                                </Grid>
+
+                                <Grid Grid.Row="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Ngày:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="10/11/2016"/>
+                                </Grid>
+
+                                <Grid Grid.Row="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Giờ:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="07:30:22"/>
+                                </Grid>
+
+                                <Grid Grid.Row="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Trạng thái:" FontWeight="Bold"/>
+                                    <Label Grid.Column="1" Content="Vào" FontSize="15" FontWeight="Bold" Foreground="Green"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>-->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="8*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" Content="Chọn ngày cần xem:"/>
+                        <DatePicker Grid.Column="0" x:Name="DateFilterPicker" SelectedDate="{Binding Path = DateChoose, StringFormat = {}{0:dd-MM-yyyy}}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,11,0,0">
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBox x:Name="DateFilterPickerTextBox" Text="{Binding Path=SelectedDate, StringFormat = {}{0:dd/MM/yyyy}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <Label Grid.Column="0" Content="Số lượng xe ra vào:" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <Label Grid.Column="1" x:Name="thongkexeraCountVehicleLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" Foreground="Yellow" Background="Red" Margin="7,10,0,0"/>
+                    </Grid>
+
+                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexeraDataGridView"  VerticalAlignment="Top" AutoGenerateColumns="False" AutoGeneratingColumn="setOnAutoGeneratingColumn" IsReadOnly="True" CanUserResizeColumns="False" MouseDoubleClick="thongkexeraDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <!--<DataGridTextColumn Header="STT" Binding="{Binding status}" Width="50"/>
                             <DataGridTextColumn Header="Họ và tên" Binding="{Binding hoten}" Width="250"/>
                             <DataGridTextColumn Header="Giới tính" Binding="{Binding gioitinh}" Width="60"/>
                             <DataGridTextColumn Header="Loại xe" Binding="{Binding loaixe}" Width="120"/>
                             <DataGridTextColumn Header="Biển số xe" Binding="{Binding biensoxe}" Width="150"/>-->
-                            <DataGridTextColumn Header="Thời gian vào" Binding="{Binding ID}" Width="210"/>
-                            <DataGridTextColumn Header="Thời gian ra" Binding="{Binding Date}" Width="210"/>
-                            <!--<DataGridTextColumn Header="Trạng thái" Binding="{Binding status}" Width="120"/>-->
-                            
+                            <!--<DataGridTextColumn Header="Thời gian vào" Binding="{Binding ID}" Width="210"/>
+                            <DataGridTextColumn Header="Thời gian ra" Binding="{Binding Date}" Width="210"/>-->
+                            <!--<DataGridTextColumn Header="Trạng thái" Binding=" Width="120"/>-->
+
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button Grid.Row="2" Content="Thoát ứng dụng" Width="100" ToolTip="Thoát khỏi ứng dụng" HorizontalAlignment="Right" Margin="0,568,18,22" Click="ExitButton_Click"/>
+        <Button Grid.Row="2" Content="Thoát ứng dụng" Width="100" ToolTip="Thoát khỏi ứng dụng" HorizontalAlignment="Right" Margin="0,563,16,27" Click="ExitButton_Click"/>
     </Grid>
 
 </Window>

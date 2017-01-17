@@ -8,5 +8,6 @@ namespace RFID_SHTP.ConnectDatabase.BEL
 {
     public class Informations
     {
+       
     }
 }

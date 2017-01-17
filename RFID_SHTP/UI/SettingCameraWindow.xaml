@@ -8,7 +8,8 @@
         Loaded="SettingWindow_Loaded"
         ResizeMode="CanMinimize" 
         WindowStartupLocation="CenterScreen"
-        Title="Thiết lập" Height="200" Width="400"
+        Title="Thiết lập" Height="220" Width="400"
+        Topmost="True"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -24,7 +25,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Content="Chọn camera 1:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <ComboBox Grid.Column="1"  Name="DevicesList1" ItemsSource="{Binding Model.ConnectionModel.DeviceList, Mode=OneWay}" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0" SelectionChanged="DevicesList1_OnSelectionChanged"/>
+            <ComboBox Grid.Column="1"  Name="DevicesList1" ItemsSource="{Binding Model.ConnectionModel.DeviceList, Mode=OneWay}" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0" SelectionChanged="DevicesList1_SelectonChanged"/>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -33,13 +34,13 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Content="Chọn camera 2:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <ComboBox Grid.Column="1"  Name="DevicesList2" ItemsSource="{Binding Model.ConnectionModel.DeviceList, Mode=OneWay}" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0" SelectionChanged="DevicesList2_OnSelectionChanged"/>
+            <ComboBox Grid.Column="1"  Name="DevicesList2" ItemsSource="{Binding Model.ConnectionModel.DeviceList, Mode=OneWay}" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0" SelectionChanged="DevicesList2_SelectonChanged"/>
         </Grid>
-        
+
         <Grid Grid.Row="2">
-            <Button Content="Khởi động camera" Name="StartCameraBtn" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="110" Margin="0,8,124,7" Click="StartCameraBtn_Click"/>
-            <Button Content="Đóng" Name="CloseBtn" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="110" Margin="0,8,7,7" Click="CloseBtn_Click"/>
+            <Button Content="Khởi động camera" Name="StartCameraBtn" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="110" Margin="0,5,127,12" Click="StartCameraBtn_Click"/>
+            <Button Content="Đóng" Name="CloseBtn" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="110" Margin="0,5,10,12" Click="CloseBtn_Click"/>
         </Grid>
-       
+
     </Grid>
 </Window>
