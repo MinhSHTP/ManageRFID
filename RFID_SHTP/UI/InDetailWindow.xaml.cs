@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +28,24 @@ namespace RFID_SHTP.UI
 
         private void InDetailWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            int i = MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex;
+            AvatarImg.Source = ConvertByteArrayToBitmapImage(File.ReadAllBytes(@"..//..//Image/huynhngochoangminh.jpg"));
+            NameLbl.Content = MainWindow._currentVehicle[MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex]._Hoten;
+            TypeVehicleLbl.Content = MainWindow._currentVehicle[MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex]._Loaixe;
+            LicensePlateLbl.Content = MainWindow._currentVehicle[MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex]._Biensoxe;
+            DateLbl.Content = MainWindow._currentVehicle[MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex]._Ngayvao;
+            TimeLbl.Content = MainWindow._currentVehicle[MainWindow._mainWindow.thongkexetrongbaiDataGridView.SelectedIndex]._Giovao;
+        }
 
+        public static BitmapImage ConvertByteArrayToBitmapImage(Byte[] bytes)
+        {
+            var stream = new MemoryStream(bytes);
+            stream.Seek(0, SeekOrigin.Begin);
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = stream;
+            image.EndInit();
+            return image;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

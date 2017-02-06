@@ -1,0 +1,46 @@
+﻿<Window x:Class="RFID_SHTP.UI.SettingReaderDeviceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RFID_SHTP.UI"
+        mc:Ignorable="d"
+        ResizeMode="CanMinimize" 
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        Title="Thiết lập đầu đọc thẻ" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="Cổng giao tiếp:" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Label Grid.Row="1" Content="Tần số thẻ:" FontWeight="Bold" Margin="0,10,0,0"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ComboBox Grid.Row="0" x:Name="PortCmb" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="-28,15,28,0"/>
+                <ComboBox Grid.Row="1" x:Name="BaudRateCmb" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="-28,15,28,0"/>
+            </Grid>
+        </Grid>
+        
+        
+        <Grid Grid.Row="1">
+            <Button x:Name="OpenPortBtn" Content="Mở port" Click="OpenPortBtn_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,78,20"/>
+            <Button x:Name="CloseBtn" Content="Đóng" Click="CloseBtn_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,21,20"/>
+        </Grid>
+    </Grid>
+</Window>

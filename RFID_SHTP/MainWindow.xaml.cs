@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static RFID_SHTP.Helpers.ReadCardHelper;
 
 namespace RFID_SHTP
 {
@@ -23,14 +24,21 @@ namespace RFID_SHTP
     public partial class MainWindow : Window
     {
         public static MainWindow _mainWindow;
+        public static SerialClient _serial;
         public static Image _cam1, _cam2;
         string _lastDevice1, _lastDevice2;
+        public static string _IDCard;
         int i = 1;
         int index = 0;
         List<MyObject> MyList = new List<MyObject>();
-        List<InfoInObj> _currentVehicle = new List<InfoInObj>();
+
+        public static List<InfoInObj> _currentVehicle = new List<InfoInObj>();
+
         Operations _operation = new Operations();
+        InfoInObj _infoCurrent = new InfoInObj();
+
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        public static System.Windows.Threading.DispatcherTimer getIDCardTimer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +52,7 @@ namespace RFID_SHTP
             _mainWindow = this;
             _cam1 = videoSourcePlayer1;
             _cam2 = videoSourcePlayer2;
-            
+
             //DataTable bindingDataTable = _operation.xenhanvien();
             //DataGridView.DataContext = bindingDataTable.DefaultView;
             //BitmapImage logo = new BitmapImage();
@@ -57,9 +65,104 @@ namespace RFID_SHTP
             //ManagerTab.Model = Model;
         }
 
+        public void GetIDCard(object sender, DataStreamEventArgs e)
+        {
+            _IDCard = System.Text.Encoding.UTF8.GetString(e.Response);
+            //MessageBox.Show(""+_IDCard, "");
+        }
+
+        public void GetIDCardTimer_Tick(object sender, EventArgs e)
+        {
+            //TimeSystemLbl.Content = _IDCard;      
+            try
+            {
+                _currentVehicle = _infoCurrent.getListCurrentVehicle();
+                if (_currentVehicle.Count == 0)
+                {
+                    Random rand = new Random();
+                    byte[] camImg1 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer1, ImgOut1));
+                    byte[] camImg2 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer2, ImgOut2));
+                    string[] plate1 = new[] { "11", "12", "13", "14", "15", "16", "17", "18" };
+                    string[] plate2 = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+                    string licensePlate = "" + plate1[rand.Next(0, plate1.Length)] + plate2[rand.Next(0, plate2.Length)];
+                    _operation.CarIN(_IDCard, licensePlate, camImg1, camImg2);
+                }
+                else
+                {
+                    //for (int i = 0; i < _currentVehicle.Count; i++)
+                    //{
+                    if (_IDCard == null)
+                    {
+
+                    }
+                    else
+                    {
+                        if (checkIsHave(_IDCard))//vehicle having in park >>> vehicle go out park
+                        {
+                            MessageBox.Show(""+_IDCard, "");
+                            //MessageBox.Show("" + _currentVehicle[i]._Mathe + " " + _currentVehicle[i]._Hoten + " " + _currentVehicle[i]._Giovao + " " + _currentVehicle[i]._Ngayvao, "");
+                            byte[] camImg1 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer1, ImgOut1));
+                            byte[] camImg2 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer2, ImgOut2));
+                            _operation.CarOut2(_IDCard, Guid.NewGuid(), camImg1, camImg2);//can not write in card. 
+                            _IDCard = null;
+                        }
+                        else//vehicle go in park
+                        {
+                            Random rand = new Random();
+                            byte[] camImg1 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer1, ImgOut1));
+                            byte[] camImg2 = ConvertImgToByte(TakeSnapshot2(videoSourcePlayer2, ImgOut2));
+                            string[] plate1 = new[] { "11", "12", "13", "14", "15", "16", "17", "18" };
+                            string[] plate2 = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+                            string licensePlate = "" + plate1[rand.Next(0, plate1.Length)] + plate2[rand.Next(0, plate2.Length)];
+                            _operation.CarIN(_IDCard, licensePlate, camImg1, camImg2);
+                            _IDCard = null;
+                        }
+                    }
+
+                    //}
+                }
+
+            }
+            catch
+            {
+                //MessageBox.Show("", "sdasdsd");
+                _IDCard = null;
+            }
+
+        }
+
+        public bool checkIsHave(string idCardCheck)
+        {
+            bool flagIsHave = false;
+            for (int i = 0; i < _currentVehicle.Count; i++)
+            {
+                if (_currentVehicle[i]._Mathe.Equals(idCardCheck))
+                {
+                    flagIsHave = true;
+                    break;
+                }
+            }
+            return flagIsHave;
+        }
+
+        public byte[] ConvertImgToByte(ImageSource imageSource)
+        {
+            var image = imageSource as BitmapSource;
+            byte[] data;
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                data = ms.ToArray();
+            }
+            return data;
+        }
+
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             TimerSystem.Content = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
             //DateTime time1 = DateTime.Now;
             //DateTime time2 = new DateTime(2017, 1, 17, 8, 53, 50);
             //TimeSpan count = time1 - time2;
@@ -169,6 +272,28 @@ namespace RFID_SHTP
             imgOut.Source = logo;
         }
 
+        ImageSource TakeSnapshot2(Image videoSourcePlayer, Image imgOut)
+        {
+            imgOut.Source = videoSourcePlayer.Source;
+            //string fileName = "C://Users//minhh//Desktop//abc";
+            //if (!File.Exists(fileName))
+            //{
+            //    SaveToJpg(videoSourcePlayer, fileName);
+            //}
+            //else
+            //{
+            //    fileName += "(" + i + ")";
+            //    i++;
+            //    SaveToJpg(videoSourcePlayer, fileName);
+            //}
+            //BitmapImage logo = new BitmapImage();
+            //logo.BeginInit();
+            //logo.UriSource = new Uri(fileName);
+            //logo.EndInit();
+            //imgOut.Source = logo;
+            return imgOut.Source;
+        }
+
         private void setOnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
             if (e.PropertyType == typeof(DateTime))
@@ -244,6 +369,8 @@ namespace RFID_SHTP
             setReadDevWindow.Show();
         }
 
+
+
         public string returnLastVideoCaptureDevice1()
         {
             return _lastDevice1;
@@ -267,8 +394,7 @@ namespace RFID_SHTP
         private void thongkexetrongbaiTabItem_Loaded()
         {
             MessageBox.Show("2", "Tab2");
-            InfoInObj infoCurrent = new InfoInObj();
-            _currentVehicle = infoCurrent.getListCurrentVehicle();
+            _currentVehicle = _infoCurrent.getListCurrentVehicle();
             thongkexetrongbaiDataGridView.ItemsSource = _currentVehicle;
             //DataTable bindingDataTable = _operation.dataCurrent();
             //thongkexetrongbaiDataGridView.DataContext = bindingDataTable.DefaultView;
@@ -297,17 +423,24 @@ namespace RFID_SHTP
 
         private void thongkexeraDataGridViewMouseDouble_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            MessageBox.Show("" + thongkexeraDataGridView.SelectedIndex, "Index");
+            if (thongkexeraDataGridView.SelectedIndex != 1)
+            {
+                OutDetailWindow detailWindow = new OutDetailWindow();
+                detailWindow.Show();
+            }
 
-            OutDetailWindow detailWindow = new OutDetailWindow();
-            detailWindow.Show();
         }
 
         private void thongkexetrongbaiDataGridViewMouseDouble_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             MessageBox.Show("" + thongkexetrongbaiDataGridView.SelectedIndex, "Index");
+            if (thongkexetrongbaiDataGridView.SelectedIndex != -1)
+            {
+                InDetailWindow detailWindow = new InDetailWindow();
+                detailWindow.Show();
+            }
 
-            InDetailWindow detailWindow = new InDetailWindow();
-            detailWindow.Show();
         }
 
         private void DateFilterPicker_SelectedChanged(object sender, SelectionChangedEventArgs e)
@@ -315,7 +448,11 @@ namespace RFID_SHTP
 
         }
 
-
+        private void StaffListMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            InfoStaffWindow infoStaffWindow = new InfoStaffWindow();
+            infoStaffWindow.Show();
+        }
 
         public MessageBoxResult showMessageBox(string titleMsgBox, string contentMsgBox, MessageBoxImage msgImage)
         {

@@ -34,7 +34,7 @@ namespace RFID_SHTP.ConnectDatabase.BAL
             command.Parameters.AddWithValue("@uniqueID", Guid.NewGuid());
             command.Parameters.AddWithValue("@bienso", Licenese);
 
-            command.Parameters.AddWithValue("@giovao", DateTime.Now.TimeOfDay);
+            command.Parameters.AddWithValue("@giovao", DateTime.Now.ToLongTimeString());
             command.Parameters.AddWithValue("@ngayvao", DateTime.Now.Date);
 
 
@@ -55,7 +55,7 @@ namespace RFID_SHTP.ConnectDatabase.BAL
             Guid severcode = (Guid)db.ExeScaler(comand);
             if (cardcode == severcode)
             {
-                comparedata = @"SELECT* FROM CURRENTVEHICLE WHERE mathe = @mathe";
+                comparedata = @"SELECT * FROM CURRENTVEHICLE WHERE mathe = @mathe";
                 comand = new SqlCommand(comparedata);
                 comand.Parameters.AddWithValue("@mathe", ID);
                 DataTable datatoLog = (DataTable)db.ExeScaler(comand);
@@ -65,7 +65,7 @@ namespace RFID_SHTP.ConnectDatabase.BAL
                 comand.Parameters.AddWithValue("@mathe", ID);
                 db.ExeNonQuery(comand);
 
-                comparedata = "INSERT into LOG (mathe,uniqueID,bienso,giovao,ngayvao,giora,ngayra,hinhcam1vao,hinhcam2vao,hinhcam1ra,hinhcam2ra) VALUES (@mathe,@uniqueID,@bienso,@ngayvao,@giovao,@giora,@ngayra,@hinhcam1vao,@hinhcam2vao,@hinhcam1ra,@hinhcam2ra";
+                comparedata = "INSERT into LOG (mathe,uniqueID,bienso,giovao,ngayvao,giora,ngayra,hinhcam1vao,hinhcam2vao,hinhcam1ra,hinhcam2ra) VALUES (@mathe,@uniqueID,@bienso,@ngayvao,@giovao,@giora,@ngayra,@hinhcam1vao,@hinhcam2vao,@hinhcam1ra,@hinhcam2ra)";
                 comand = new SqlCommand(comparedata);
                 foreach (DataRow row in datatoLog.Rows)
                 {
@@ -79,7 +79,7 @@ namespace RFID_SHTP.ConnectDatabase.BAL
                 }
                 comand.Parameters.AddWithValue("@hinhcam1ra", hinhcam1ra);
                 comand.Parameters.AddWithValue("@hinhcam2ra", hinhcam2ra);
-                comand.Parameters.AddWithValue("@ngayra", DateTime.Now.TimeOfDay);
+                comand.Parameters.AddWithValue("@giora", DateTime.Now.ToLongTimeString());
                 comand.Parameters.AddWithValue("@ngayra", DateTime.Now.Date);
                 db.ExeNonQuery(comand);
             }
@@ -87,9 +87,54 @@ namespace RFID_SHTP.ConnectDatabase.BAL
 
         }
 
+        public void CarOut2(string ID, Guid cardcode, byte[] hinhcam1ra, byte[] hinhcam2ra)
+        {
+            
+            string comparedata = @"SELECT uniqueID FROM CURRENTVEHICLE WHERE mathe = @mathe";
+            SqlCommand comand = new SqlCommand(comparedata);
+            comand.Parameters.AddWithValue("@mathe", ID);
+            Guid severcode = (Guid)db.ExeScaler(comand);
+            //if (cardcode == severcode)
+            //{
+
+                comparedata = @"SELECT * FROM CURRENTVEHICLE WHERE mathe = @mathe";
+                comand = new SqlCommand(comparedata);
+                comand.Parameters.AddWithValue("@mathe", ID);
+                DataTable datatoLog = db.ExeReader(comand);
+
+                
+                
+                comparedata = "INSERT into LOG (mathe,uniqueID,bienso,giovao,ngayvao,giora,ngayra,hinhcam1vao,hinhcam1ra,hinhcam2vao,hinhcam2ra,problem) VALUES (@mathe,@uniqueID,@bienso,@giovao,@ngayvao,@giora,@ngayra,@hinhcam1vao,@hinhcam1ra,@hinhcam2vao,@hinhcam2ra,@problem)";
+                comand = new SqlCommand(comparedata);
+            foreach (DataRow row in datatoLog.Rows)
+            {
+                comand.Parameters.AddWithValue("@mathe", row["mathe"]);
+                comand.Parameters.AddWithValue("@uniqueID", row["uniqueID"]);
+                comand.Parameters.AddWithValue("@bienso", row["bienso"]);
+                comand.Parameters.AddWithValue("@giovao", row["giovao"]);
+                comand.Parameters.AddWithValue("@ngayvao", row["ngayvao"]);
+                comand.Parameters.AddWithValue("@hinhcam1vao", row["hinhcam1vao"]);
+                comand.Parameters.AddWithValue("@hinhcam2vao", row["hinhcam2vao"]);
+            }
+            comand.Parameters.AddWithValue("@hinhcam1ra", hinhcam1ra);
+            comand.Parameters.AddWithValue("@hinhcam2ra", hinhcam2ra);
+            comand.Parameters.AddWithValue("@giora", DateTime.Now.ToLongTimeString());
+            comand.Parameters.AddWithValue("@ngayra", DateTime.Now.Date);
+            comand.Parameters.AddWithValue("@problem", "");
+            db.ExeReader(comand);
+
+                comparedata = @"DELETE FROM CURRENTVEHICLE WHERE mathe = @mathe";
+                comand = new SqlCommand(comparedata);
+                comand.Parameters.AddWithValue("@mathe", ID);
+                db.ExeReader(comand);
+            //}
+
+
+        }
+
         public DataTable dataLog()
         {
-            string getdatalog = @"SELECT* FROM LOG";
+            string getdatalog = @"SELECT * FROM LOG";
             return (DataTable)db.ExeReader(new SqlCommand(getdatalog));
 
         }
@@ -97,7 +142,7 @@ namespace RFID_SHTP.ConnectDatabase.BAL
 
         public DataTable dataCurrent()
         {
-            string getdatalog = @"SELECT hoten, biensoxe, loaixe, giovao, ngayvao, hinhnhanvien, hinhcam1vao, hinhcam2vao, uniqueID
+            string getdatalog = @"SELECT hoten, biensoxe, loaixe, giovao, ngayvao, hinhnhanvien, hinhcam1vao, hinhcam2vao, uniqueID, XENHANVIEN.mathe
                                   FROM XENHANVIEN, CURRENTVEHICLE
                                   WHERE XENHANVIEN.mathe=CURRENTVEHICLE.mathe";
             return (DataTable)db.ExeReader(new SqlCommand(getdatalog));
@@ -113,7 +158,8 @@ namespace RFID_SHTP.ConnectDatabase.BAL
 
         public DataTable xenhanvien()
         {
-            string getdatalog = @"SELECT* FROM XENHANVIEN";
+            string getdatalog = @"SELECT hoten, loaixe, biensoxe
+                                  FROM XENHANVIEN";
             return (DataTable)db.ExeReader(new SqlCommand(getdatalog));
         }
 

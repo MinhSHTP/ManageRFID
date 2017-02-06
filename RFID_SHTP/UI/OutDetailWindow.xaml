@@ -119,7 +119,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Trạng thái:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="Đã rời bãi" FontSize="20" FontWeight="Bold" Foreground="Red"/>
+                            <Label Grid.Column="1" Content="Đã ra" FontSize="20" FontWeight="Bold" Foreground="Red"/>
                         </Grid>
                     </Grid>
                 </Grid>

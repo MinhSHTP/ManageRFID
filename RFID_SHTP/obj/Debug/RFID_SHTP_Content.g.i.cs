@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/warning_icon_fix.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/white_background.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/minh.jpg")]
 
 

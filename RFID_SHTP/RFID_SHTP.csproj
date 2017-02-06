@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
@@ -88,10 +89,14 @@
     <Compile Include="ConnectDatabase\BEL\Informations.cs" />
     <Compile Include="ConnectDatabase\DAL\Dbconection.cs" />
     <Compile Include="Helpers\GetListCamerasHelper.cs" />
+    <Compile Include="Helpers\ReadCardHelper.cs" />
     <Compile Include="Objects\CameraDevice.cs" />
     <Compile Include="Objects\MyObject .cs" />
     <Compile Include="UI\InDetailWindow.xaml.cs">
       <DependentUpon>InDetailWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\InfoStaffWindow.xaml.cs">
+      <DependentUpon>InfoStaffWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\OutDetailWindow.xaml.cs">
       <DependentUpon>OutDetailWindow.xaml</DependentUpon>
@@ -115,6 +120,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UI\InDetailWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\InfoStaffWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,7 +182,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\warning_icon_fix.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Image\white_background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\huynhngochoangminh.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

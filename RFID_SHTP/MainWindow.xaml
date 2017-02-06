@@ -30,6 +30,7 @@
                 <MenuItem Header="_Tra cứu">
                     <MenuItem Header="_Tra cứu theo ngày vào ra" Click="SearchByDateInOutMenuItem_Click"/>
                     <MenuItem Header="_Tra cứu theo biển số xe" Click="SearchByLicensePlateMenuItem_Click"/>
+                    <MenuItem Header="_Danh sách nhân viên" Click="StaffListMenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Báo cáo thống kê" Click="ReportMenuItem_Click">
                     <MenuItem Header="_Báo cáo thống kê theo ngày" />
@@ -301,7 +302,7 @@
 
                         <Grid Grid.Row="0">
                             <GroupBox Header="Camera 1" Margin="0,0,10,15">
-                                <Image  x:Name="videoSourcePlayer1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill" Source="/Image/black_background.jpg">
+                                <Image  x:Name="videoSourcePlayer1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Source="/Image/black_background.jpg">
 
                                 </Image>
                                 <!--<controls1:VideoViewerWPF  Name="VideoViewer1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -497,12 +498,12 @@
                         <Label Grid.Column="1" x:Name="thongkexetrongbaiCountVehicleLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" Foreground="Yellow" Background="Red" Margin="7,10,0,0"/>
                     </Grid>
 
-                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexetrongbaiDataGridView" AutoGenerateColumns="False" VerticalAlignment="Top" IsReadOnly="True" CanUserResizeColumns="False" MouseDoubleClick="thongkexetrongbaiDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
+                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexetrongbaiDataGridView" AutoGenerateColumns="False" VerticalAlignment="Top" IsReadOnly="True" CanUserResizeColumns="False" CanUserResizeRows="False" MouseDoubleClick="thongkexetrongbaiDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn  Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image x:Name="testImg" Height="25" Width="50" Source="{Binding _WarningIcon}"/>
+                                        <Image x:Name="testImg" Height="25" Width="50" Source="{Binding _WarningIcon}" ToolTip="{Binding _ToolTip}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -673,7 +674,7 @@
                         <Label Grid.Column="1" x:Name="thongkexeraCountVehicleLbl" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" Foreground="Yellow" Background="Red" Margin="7,10,0,0"/>
                     </Grid>
 
-                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexeraDataGridView"  VerticalAlignment="Top" AutoGenerateColumns="False" AutoGeneratingColumn="setOnAutoGeneratingColumn" IsReadOnly="True" CanUserResizeColumns="False" MouseDoubleClick="thongkexeraDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
+                    <DataGrid Grid.Row="1" Margin="0,9,0,80" Grid.RowSpan="2" x:Name="thongkexeraDataGridView"  VerticalAlignment="Top" AutoGenerateColumns="False" AutoGeneratingColumn="setOnAutoGeneratingColumn" IsReadOnly="True" CanUserResizeColumns="False" CanUserResizeRows="False" MouseDoubleClick="thongkexeraDataGridViewMouseDouble_Click" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <!--<DataGridTextColumn Header="STT" Binding="{Binding status}" Width="50"/>
                             <DataGridTextColumn Header="Họ và tên" Binding="{Binding hoten}" Width="250"/>

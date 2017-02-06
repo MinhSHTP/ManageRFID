@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:RFID_SHTP.UI"
         mc:Ignorable="d"
         Loaded="InDetailWindow_Loaded"
-        Title="Xem chi tiết" Height="600" Width="1200">
-    <Grid>
+        Title="Xem chi tiết" Height="600" Width="800">
+    <Grid Background="#FFE5E5E5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="9*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Thông tin chi tiết" Margin="0,10,0,0">
@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="*"/>
                             <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Ảnh vào 1" Grid.Column="0">
+                        <GroupBox Header="Ảnh vào 1" Grid.Column="0" Margin="0,3,0,-3">
                             <Image x:Name="ImgInReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
                         </GroupBox>
 
@@ -42,7 +42,7 @@
                             <ColumnDefinition Width="*"/>
                             <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
-                        <GroupBox Header="Ảnh vào 2" Grid.Column="0">
+                        <GroupBox Header="Ảnh vào 2" Grid.Column="0" Margin="0,6,0,-6">
                             <Image x:Name="ImgOutReport1"  Source="/Image/black_background.jpg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"/>
                         </GroupBox>
 
@@ -57,7 +57,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Image Grid.Row="0" Name="AvatarReport" Source="/Image/phamtruongan.jpg" Stretch="Uniform" Height="Auto" Width="Auto" Margin="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Image Grid.Row="0" Name="AvatarImg" Source="/Image/phamtruongan.jpg" Stretch="Uniform" Height="Auto" Width="Auto" Margin="0,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                     <Grid Grid.Row="1" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -74,7 +74,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Họ và tên:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="Phạm Trường An"/>
+                            <Label Grid.Column="1" Name="NameLbl" Content="Phạm Trường An"/>
                         </Grid>
 
                         <Grid Grid.Row="1">
@@ -83,7 +83,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Loại xe:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="Xe máy"/>
+                            <Label Grid.Column="1" Name="TypeVehicleLbl" Content="Xe máy"/>
                         </Grid>
 
                         <Grid Grid.Row="2">
@@ -92,7 +92,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Biển số xe:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="29-E1 456.78"/>
+                            <Label Grid.Column="1" Name="LicensePlateLbl" Content="29-E1 456.78"/>
                         </Grid>
 
                         <Grid Grid.Row="3">
@@ -101,7 +101,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Ngày:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="10/11/2016"/>
+                            <Label Grid.Column="1" Name="DateLbl" Content="10/11/2016"/>
                         </Grid>
 
                         <Grid Grid.Row="4">
@@ -110,7 +110,7 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Giờ:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="07:30:22"/>
+                            <Label Grid.Column="1" Name="TimeLbl" Content="07:30:22"/>
                         </Grid>
 
                         <Grid Grid.Row="5">
@@ -119,13 +119,13 @@
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="Trạng thái:" FontWeight="Bold"/>
-                            <Label Grid.Column="1" Content="Còn trong bãi" FontSize="20" FontWeight="Bold" Foreground="Green"/>
+                            <Label Grid.Column="1" Name="StatusLbl" Content="Đang gửi" FontSize="20" FontWeight="Bold" Foreground="Green"/>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
         </GroupBox>
-        
-        <Button Grid.Row="1" Content="Đóng" Width="100" ToolTip="Thoát khỏi ứng dụng" HorizontalAlignment="Right" Margin="0,0,16,25" Click="CloseButton_Click" Height="46" VerticalAlignment="Bottom"/>
+
+        <Button Content="Đóng" Width="50" ToolTip="Đóng cửa sổ" HorizontalAlignment="Right" Margin="0,0,7,9" Click="CloseButton_Click" Height="40" VerticalAlignment="Bottom" Grid.Row="1"/>
     </Grid>
 </Window>

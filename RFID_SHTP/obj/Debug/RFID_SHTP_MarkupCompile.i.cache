@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\Work_at_SHTP_Training\Dev_WindowsApplication\ManageRFID\RFID_SHTP\RFID_SHTP\App.xaml
-5103576972
+6623196710
 
-21-68667477
-22-589161853
-MainWindow.xaml;UI\InDetailWindow.xaml;UI\OutDetailWindow.xaml;UI\SettingCameraWindow.xaml;UI\SettingReaderDeviceWindow.xaml;
+23508613915
+23-1567408786
+MainWindow.xaml;UI\InDetailWindow.xaml;UI\InfoStaffWindow.xaml;UI\OutDetailWindow.xaml;UI\SettingCameraWindow.xaml;UI\SettingReaderDeviceWindow.xaml;
 
-False
+True
 

@@ -32,6 +32,10 @@ namespace RFID_SHTP.ConnectDatabase.BEL
 
         public int _CountDay = 0;
 
+        public string _ToolTip { get; set; }
+
+        public string _Mathe { get; set; }
+
         public List<InfoInObj> getListCurrentVehicle()
         {
             List<InfoInObj> resultList = new List<InfoInObj>();
@@ -51,14 +55,17 @@ namespace RFID_SHTP.ConnectDatabase.BEL
                 newInfoInObj._Hinhcam2vao = bindingDataTable.Rows[i][7].ToString();
                 newInfoInObj._UniqueID = bindingDataTable.Rows[i][8].ToString();
                 newInfoInObj._Tracking = getTimeTracking(newInfoInObj._Ngayvao, newInfoInObj._Giovao);
-                if(_CountDay>1)//more than 1 day
+                if (_CountDay > 1)//more than 1 day
                 {
                     newInfoInObj._WarningIcon = File.ReadAllBytes(@"..//..//Image/warning_icon_fix.png");
+                    newInfoInObj._ToolTip = getToolTip("Xe này đã gửi quá 1 ngày");
                 }
                 else
                 {
                     newInfoInObj._WarningIcon = File.ReadAllBytes(@"..//..//Image/white_background.png");
+                    newInfoInObj._ToolTip = getToolTip("Đã gửi từ " + _CountDay + " ngày trước");
                 }
+                newInfoInObj._Mathe = bindingDataTable.Rows[i][9].ToString();
                 resultList.Add(newInfoInObj);
                 _CountDay = 0;
             }
@@ -74,24 +81,37 @@ namespace RFID_SHTP.ConnectDatabase.BEL
             DateTime timeIn = new DateTime(Int32.Parse(ngayvaoConverter[2]), Int32.Parse(ngayvaoConverter[1]), Int32.Parse(ngayvaoConverter[0]), Int32.Parse(giovaoConverter[0]), Int32.Parse(giovaoConverter[1]), Int32.Parse(giovaoConverter[2]));
             TimeSpan countTime = timeNow - timeIn;
             double resultTIme = countTime.TotalSeconds;
-            if (resultTIme > 86400)// 1 day = 86400 second
+            if (resultTIme > 86400)//1 day = 86400 second
             {
-                timeTracking = "Đã vào từ " + (int)countTime.TotalDays + " ngày trước";
                 _CountDay = (int)countTime.TotalDays;
+                if(_CountDay>=30)
+                {
+                    timeTracking = "Đã gửi từ " + (int)countTime.TotalDays + " tháng trước";
+                }
+                else
+                {
+                    timeTracking = "Đã gửi từ " + (int)countTime.TotalDays + " ngày trước";
+                }
+
             }
             else if ((resultTIme > 3600) && (resultTIme < 86400))//less than 1 day
             {
-                timeTracking = "Đã vào từ " + (int)countTime.TotalHours + " tiếng trước";
+                timeTracking = "Đã gửi từ " + (int)countTime.TotalHours + " tiếng trước";
             }
             else if ((resultTIme < 3600) && (resultTIme > 60))//less than 1 hour
             {
-                timeTracking = "Đã vào từ " + (int)countTime.TotalMinutes + " phút trước";
+                timeTracking = "Đã gửi từ " + (int)countTime.TotalMinutes + " phút trước";
             }
-            else if (resultTIme < 60)// less than 1 minute
+            else if (resultTIme < 60)//less than 1 minute
             {
-                timeTracking = "Đã vào từ vài giây trước";
+                timeTracking = "Đã gửi từ vài giây trước";
             }
             return timeTracking;
+        }
+
+        public string getToolTip(string tooltip)
+        {
+            return tooltip;
         }
     }
 }
